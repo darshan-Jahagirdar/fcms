@@ -47,4 +47,25 @@ class AlbumController extends Controller
         return view('photos.album', ['album' => $album]);
     }
 
+    /**
+     * tagComment 
+     * 
+     * Display the form for tagging and commenting on all photos in an album.
+     * This is typically step 3 of the upload process.
+     *
+     * @param int $albumId 
+     * @return Illuminate\View\View
+     */
+    public function tagComment(int $albumId)
+    {
+        $album = PhotoAlbum::where('photo_albums.id', $albumId)
+            ->join('users as cu', 'photo_albums.created_user_id', '=', 'cu.id')
+            ->select('photo_albums.*', 'photo_albums.name as album_name', 'cu.name', 'cu.displayname')
+            ->with('photos')
+            ->with('comments')      // photo album comments
+            ->with('users')         // tagged users in the album
+            ->first();
+
+        return view('photos.create-tag-comment', [ 'album' => $album ]);
+    }
 }

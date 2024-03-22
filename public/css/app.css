@@ -21117,6 +21117,27 @@ body#photo-carousel .details-col {
   height: 100%;
 }
 
+body#photoUpload .uploader-sidebar {
+  max-width: 290px;
+}
+body#photoUpload .uploader-sidebar li {
+  width: 44px;
+}
+body#photoUpload .uploader-sidebar li.active {
+  color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+body#photoUpload .uploader-main #photo-list {
+  max-height: 400px;
+  overflow: auto;
+}
+body#photoUpload .uploader-main #photo-list > li.template {
+  display: none;
+}
+body#photoUpload .uploader-main #photo-list > li p > b {
+  color: var(--bs-gray-500);
+}
+
 body#profile li a {
   color: var(--bs-secondary);
 }

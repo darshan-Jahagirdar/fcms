@@ -70,6 +70,8 @@ class PhotoController extends Controller
             'album' => $album->toArray(),
         ];
 
+        $return['album']['url'] = route('photos.create.tagComment', $album->id);
+
         $file = $request->file('photo');
 
         // Add the photo to the db

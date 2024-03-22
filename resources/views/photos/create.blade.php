@@ -1,13 +1,11 @@
 @extends('layouts.main')
-@section('body-id', 'photos')
+@section('body-id', 'photoUpload')
 @section('main-bg', 'bg-light')
 
 @section('content')
 <div class="p-5">
 
-    <form action="{{ route('discussions.create') }}" method="post">
-        @csrf
-
+    <form>
         <div class="border rounded bg-white">
             <div class="tab-content">
 
@@ -50,7 +48,8 @@
                             </div>
                         @endif
                             <div class="uploader-footer d-flex justify-content-end mt-5">
-                                <a href="#" class="next btn btn-primary px-4 text-white rounded-5">{{ _gettext('Next') }}<i class="bi-chevron-compact-right ms-2"></i>
+                                <a href="#" class="next btn btn-primary px-4 text-white rounded-5">
+                                    {{ _gettext('Next') }}<i class="bi-chevron-compact-right ms-2"></i>
                                 </a>
                             </div><!-- /.uploader-footer -->
                         </div><!-- /.uploader-main -->
@@ -86,10 +85,10 @@
                                 <input type="file" class="d-none" id="photo-picker" multiple accept="image/*">
                             </div>
                             <ul id="photo-list" class="list-unstyled">
-                                <li class="template p-2 my-2 border">
+                                <li class="template p-3 my-2 border">
                                     <button type="button" class="btn-close float-end" aria-label="{{ _gettext('Close') }}"></button>
                                     <div class="d-flex align-items-center">
-                                        <div class="w-25">
+                                        <div class="preview" style="height:150px; width:150px;">
                                         </div>
                                         <div class="ms-3 flex-grow-1">
                                             <p class="mb-1 name"><b></b></p>
@@ -100,35 +99,12 @@
                                     </div>
                                 </li>
                             </ul>
-                            <div class="uploader-footer d-flex justify-content-between mt-5">
-                                <a href="#" class="prev btn btn-outline-secondary px-4 rounded-5"><i class="bi-chevron-compact-left me-2"></i>{{ _gettext('Previous') }}</a>
-                                <a href="#" class="next btn btn-primary px-4 text-white rounded-5">{{ _gettext('Next') }}<i class="bi-chevron-compact-right ms-2"></i></a>
-                            </div><!-- /.uploader-footer -->
-                        </div><!-- /.uploader-main -->
-                    </div>
-                </div><!-- /#photos-pane -->
-
-                <div class="tab-pane fade" id="comments-pane" role="tabpanel" tabindex="0">
-                    <div class="d-flex flex-nowrap">
-                        <div class="uploader-sidebar col-auto border-end">
-                            <ul class="p-5 list-unstyled">
-                                <li class="d-inline-block rounded-5 border border-2 text-muted p-2 mx-2 text-center">1</li>
-                                <li class="d-inline-block rounded-5 border border-2 text-muted p-2 mx-2 text-center">2</li>
-                                <li class="d-inline-block rounded-5 border border-2 text-muted p-2 mx-2 text-center active">3</li>
-                            </ul>
-                            <div class="instructions text-center text-muted">
-                                <img style="width: 90px;" src="{{ asset('img/photos.jpg') }}"/>
-                                <p class="p-5 pt-1">
-                                    <b>{{ _gettext('Finishing Up') }}</b><br/>
-                                    {{ _gettext('Your photos have been uploaded successfully.  Feel free to tag people and add comments.') }}
-                                </p>
+                            <div id="upload-progress" class="progress d-none">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                        </div><!-- /.uploader-sidebar -->
-                        <div class="uploader-main col p-5">
-                            <h5>{{ _gettext('Success') }}</h5>
                             <div class="uploader-footer d-flex justify-content-between mt-5">
                                 <a href="#" class="prev btn btn-outline-secondary px-4 rounded-5"><i class="bi-chevron-compact-left me-2"></i>{{ _gettext('Previous') }}</a>
-                                <a href="#" class="next btn btn-primary px-4 text-white rounded-5">{{ _gettext('Next') }}<i class="bi-chevron-compact-right ms-2"></i></a>
+                                <a href="#" class="upload btn btn-primary px-4 text-white rounded-5 d-none">{{ _gettext('Upload') }}<i class="bi-cloud-arrow-up ms-2"></i></a>
                             </div><!-- /.uploader-footer -->
                         </div><!-- /.uploader-main -->
                     </div>
@@ -139,38 +115,6 @@
 
     </form>
 
-<style>
-.uploader-sidebar
-{
-    max-width: 290px;
-}
-.uploader-sidebar li
-{
-    width: 44px;
-}
-.uploader-sidebar li.active
-{
-    color: var(--bs-primary) !important;
-    border-color: var(--bs-primary) !important;
-}
-.photo-area > div
-{
-    border: 3px dashed white;
-}
-#photo-list
-{
-    max-height: 400px;
-    overflow: auto;
-}
-#photo-list > li.template
-{
-    display: none;
-}
-#photo-list > li.template p > b
-{
-    color: var(--bs-gray-500);
-}
-</style>
 <script>
 $(function() {
     $.ajaxSetup({
@@ -179,36 +123,42 @@ $(function() {
         }
     });
 
-    // From Step 1 -> Step 2
+    // From Step 1 -> Step 2 (Album)
     $('#album-pane .uploader-footer > a.next').click(function(e) {
         e.preventDefault();
         $('.tab-pane').removeClass('show active');
         $('#photos-pane').addClass('show active');
     });
 
-    // From Step 2 <- Step 1
+    // From Step 2 -> Step 1 (Upload)
     $('#photos-pane .uploader-footer > a.prev').click(function(e) {
         e.preventDefault();
         $('.tab-pane').removeClass('show active');
         $('#album-pane').addClass('show active');
     });
 
+    // Upload
+    $('#photos-pane .uploader-footer > a.upload').click(function(e) {
+        e.preventDefault();
+
+        $('#upload-progress').removeClass('d-none');
+        $('.photo-area').addClass('d-none');
+
+        uploadPhotos();
+    });
+
     // some globals for the uploader
     let formData;
     let lastAlbumId;
-
-    // From Step 2 -> Step 3
-    $('#photos-pane .uploader-footer > a.next').click(function(e) {
-        e.preventDefault();
-        uploadPhotos();
-    });
+    let url;
 
     async function uploadPhotos()
     {
         let photoPicker = $('#photo-picker')[0];
+        let totalFiles  = photoPicker.files.length;
+        let finished    = 0;
 
-        let totalfiles = photoPicker.files.length;
-        for (var index = 0; index < totalfiles; index++) {
+        for (var index = 0; index < totalFiles; index++) {
             formData = new FormData();
 
             if (index == 0)
@@ -233,7 +183,16 @@ $(function() {
             formData.append("photo", photoPicker.files[index]);
 
             let result = await uploadPhoto(index, formData);
+
+            finished++;
+
+            // show the total upload progress
+            let percentage = (finished / totalFiles) * 100;
+            $('#upload-progress .progress-bar').width(percentage + '%');
         }
+
+        // From Step 2 -> Step 3 (Comments)
+        window.location.href = url;
     }
 
     async function uploadPhoto(index, formData)
@@ -252,6 +211,7 @@ $(function() {
             function(data) {
                 $('li.index-'+index+' .progress-bar').width('100%');
                 lastAlbumId = data.album.id;
+                url = data.album.url;
             // failure
             }, function(data) {
                 $('li.index-'+index+' .progress-bar').addClass('bg-danger');
@@ -271,6 +231,8 @@ $(function() {
 
         if (input.files)
         {
+            $('#photos-pane .uploader-footer > a.upload').removeClass('d-none');
+
             let totalFiles = input.files.length;
 
             for (i = 0; i < totalFiles; i++)
@@ -288,10 +250,12 @@ $(function() {
                 {
                     let img = document.createElement('img');
                     img.src = event.target.result;
-                    img.classList.add('img-fluid');
+                    img.classList.add('object-fit-cover');
+                    img.classList.add('h-100');
+                    img.classList.add('w-100');
 
                     $li.find('.name > b').text(filename);
-                    $li.find('div.w-25').append(img);
+                    $li.find('div.preview').append(img);
                     $output.append($li);
                 }
 

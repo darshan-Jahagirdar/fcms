@@ -1,0 +1,39 @@
+body#photoUpload
+{
+    .uploader-sidebar
+    {
+        max-width: 290px;
+
+        li
+        {
+            width: 44px;
+
+            &.active
+            {
+                color: var(--bs-primary) !important;
+                border-color: var(--bs-primary) !important;
+            }
+        }
+    }
+    .uploader-main
+    {
+        #photo-list
+        {
+            max-height: 400px;
+            overflow: auto;
+
+            > li
+            {
+                &.template
+                {
+                    display: none;
+
+                }
+                p > b
+                {
+                    color: var(--bs-gray-500);
+                }
+            }
+        }
+    }
+}

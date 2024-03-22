@@ -111,6 +111,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get( '/photos/places',                    [ PhotoPlaceController::class, 'index' ])->name('photos.places');
     Route::get( '/photos/upload',                    [ PhotoController::class, 'create' ])->name('photos.create');
     Route::post('/photos/upload',                    [ PhotoController::class, 'store' ]);
+    Route::get( '/photos/upload/{aid}',              [ PhotoAlbumController::class, 'tagComment' ])->name('photos.create.tagComment');
+    Route::post('/photos/upload/{aid}',              [ PhotoAlbumController::class, 'tagCommentStore' ]);
     Route::get( '/photos/albums/{id}',               [ PhotoAlbumController::class, 'show' ])->name('photos.albums.show');
     Route::get( '/photos/albums/{aid}/photos/{pid}', [ PhotoController::class, 'show' ])->name('photos.show');
 
