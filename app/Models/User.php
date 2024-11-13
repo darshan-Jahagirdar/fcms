@@ -21,16 +21,16 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $dates = [
-        'birthday',
-        'locked',
-        'activity',
-        'created_at',
-        'updated_at'
+    protected $casts = [
+        'birthday'   => 'datetime',
+        'locked'     => 'datetime',
+        'activity'   => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     /**
