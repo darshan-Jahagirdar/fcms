@@ -322,3 +322,16 @@ if (!function_exists('parseLegacySmilies'))
         return $source;
     }
 }
+
+if (!function_exists('usingFacebook'))
+{
+    function usingFacebook()
+    {
+        if (!empty(config('facebook.app_id')))
+        {
+            return true;
+        }
+
+        return false;
+    }
+}

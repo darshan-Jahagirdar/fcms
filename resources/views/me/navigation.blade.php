@@ -19,3 +19,12 @@
         <a class="text-decoration-none" href="{{ route('my.account') }}">{{ _gettext('Account') }}</a>
     </li>
 </ul>
+
+@if(usingFacebook())
+<h5 class="text-end mt-5">{{ _gettext('Social Media') }}</h5>
+<ul class="list-unstyled text-end">
+    <li class="@yield('settings.facebook')">
+        <a class="text-decoration-none" href="{{ route('my.facebook') }}">{{ _gettext('Facebook') }}</a>
+    </li>
+</ul>
+@endif

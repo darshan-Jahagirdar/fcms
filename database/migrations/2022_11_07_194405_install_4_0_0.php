@@ -537,6 +537,7 @@ class Install400 extends Migration
             $table->foreignId('user_id');
             $table->string('language', 6)->default('en_US');
             $table->string('timezone')->default('America/New_York');
+            $table->string('facebook_token', 280)->nullable();
         });
 
         Schema::create('video_comments', function (Blueprint $table) {

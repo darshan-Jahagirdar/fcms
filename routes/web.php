@@ -24,6 +24,8 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AdminPollController;
+use App\Http\Controllers\MeFacebookController;
+use App\Http\Controllers\FacebookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,18 +65,20 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/poll/vote', [ HomeController::class, 'vote' ])->name('poll.vote');
 
-    Route::get( '/me/profile',         [ MeController::class, 'profileEdit' ])->name('my.profile');
-    Route::post('/me/profile',         [ MeController::class, 'profileUpdate' ]);
-    Route::get( '/me/profile/avatar',  [ MeController::class, 'avatarEdit' ])->name('my.avatar');
-    Route::post('/me/profile/avatar',  [ MeController::class, 'avatarUpdate' ]);
-    Route::get( '/me/profile/address', [ MeController::class, 'addressEdit' ])->name('my.address');
-    Route::post('/me/profile/address', [ MeController::class, 'addressUpdate' ]);
-    Route::get( '/me/messages',        [ MeController::class, 'messages' ])->name('my.messages');
-    Route::get( '/me/notifications',   [ MeController::class, 'notifications' ])->name('my.notifications');
-    Route::get( '/me/settings',        [ MeController::class, 'settingsEdit' ])->name('my.settings');
-    Route::post('/me/settings',        [ MeController::class, 'settingsUpdate' ]);
-    Route::get( '/me/account',         [ MeController::class, 'accountEdit' ])->name('my.account');
-    Route::post('/me/account',         [ MeController::class, 'accountUpdate' ]);
+    Route::get( '/me/profile',           [ MeController::class, 'profileEdit' ])->name('my.profile');
+    Route::post('/me/profile',           [ MeController::class, 'profileUpdate' ]);
+    Route::get( '/me/profile/avatar',    [ MeController::class, 'avatarEdit' ])->name('my.avatar');
+    Route::post('/me/profile/avatar',    [ MeController::class, 'avatarUpdate' ]);
+    Route::get( '/me/profile/address',   [ MeController::class, 'addressEdit' ])->name('my.address');
+    Route::post('/me/profile/address',   [ MeController::class, 'addressUpdate' ]);
+    Route::get( '/me/messages',          [ MeController::class, 'messages' ])->name('my.messages');
+    Route::get( '/me/notifications',     [ MeController::class, 'notifications' ])->name('my.notifications');
+    Route::get( '/me/settings',          [ MeController::class, 'settingsEdit' ])->name('my.settings');
+    Route::post('/me/settings',          [ MeController::class, 'settingsUpdate' ]);
+    Route::get( '/me/account',           [ MeController::class, 'accountEdit' ])->name('my.account');
+    Route::post('/me/account',           [ MeController::class, 'accountUpdate' ]);
+    Route::get( '/me/facebook',          [ MeFacebookController::class, 'index' ])->name('my.facebook');
+    Route::get( '/me/facebook/callback', [ MeFacebookController::class, 'callback' ])->name('my.facebook.callback');
 
     Route::get( '/calendar',                               [ CalendarController::class, 'index' ])->name('calendar');
     Route::get( '/calendar/month/{year?}/{month?}/{day?}', [ CalendarController::class, 'index' ])->name('calendar.month');
@@ -192,3 +196,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get( '/logout', [ LoginController::class, 'logout' ])->name('auth.logout');
 });
 
+if (usingFacebook()) {
+    Route::get('/facebook/privacy', [ FacebookController::class, 'privacy' ])->name('facebook.privacy');
+    Route::get('/facebook/tos',     [ FacebookController::class, 'tos' ])->name('facebook.tos');
+    Route::get('/facebook/delete',  [ FacebookController::class, 'delete' ])->name('facebook.delete');
+}

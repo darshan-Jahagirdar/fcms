@@ -10,9 +10,11 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
+        "joelbutcher/laravel-facebook-graph": "^1.2",
         "laravel/framework": "^9.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "*",
+        "php-http/guzzle7-adapter": "^1.0",
         "phpmyadmin/motranslator": "^5.3"
     },
     "require-dev": {
@@ -61,7 +63,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
