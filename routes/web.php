@@ -22,7 +22,7 @@ use App\Http\Controllers\FamilyTreeController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\AdminMemberController;
+use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\AdminPollController;
 use App\Http\Controllers\MeFacebookController;
 use App\Http\Controllers\FacebookController;
@@ -176,8 +176,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get( '/upgrade', [ HomeController::class, 'home' ])->name('admin.upgrade');
         Route::get( '/config', [ HomeController::class, 'home' ])->name('admin.config');
 
-        Route::get( '/members',           [ AdminMemberController::class, 'index' ])->name('admin.members');
-        Route::post('/members/{id}/edit', [ AdminMemberController::class, 'update' ])->name('admin.members.update');
+        Route::get( '/members',             [ AdminMemberController::class, 'index' ])->name('admin.members');
+        Route::get( '/members/{user}/edit',   [ AdminMemberController::class, 'edit' ])->name('admin.members.edit');
+        Route::post('/members/{user}/edit',   [ AdminMemberController::class, 'update' ])->name('admin.members.update');
+        Route::post('/members/{user}/delete', [ AdminMemberController::class, 'destroy' ])->name('admin.members.destroy');
 
         Route::get( '/photos', [ HomeController::class, 'home' ])->name('admin.photos');
 

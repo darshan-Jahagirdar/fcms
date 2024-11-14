@@ -14,38 +14,52 @@
                 <th>{{ _gettext('Last Seen') }}</th>
                 <th>{{ _gettext('Can Login?') }}</th>
                 <th>{{ _gettext('Access') }}</th>
+            @can('administrate')
+                <th>{{ _gettext('Options') }}</th>
+            @endcan
             </tr>
         </thead>
         <tbody>
         @foreach ($users as $user)
             <tr>
-                <td>{{ $user->id }}</td>
-                <td>
+                <td class="align-middle">{{ $user->id }}</td>
+                <td class="align-middle">
                     <span class="fw-bold text-purple">{{ getUserDisplayName($user->toArray()) }}</span><br>
                     <span class="text-muted small fst-italic">{{ $user->email }}</span>
                 </td>
-                <td>{{ $user->created_at->format('M j, Y') }}</td>
-                <td>
+                <td class="align-middle">{{ $user->created_at->format('M j, Y') }}</td>
+                <td class="align-middle">
                 @if (is_null($user->activity))
                     {{ _gettext('Never') }}
                 @else
                     {{ $user->activity->diffForHumans() }}
                 @endif
                 </td>
-                <td>
+                <td class="align-middle">
                 @if ($user->activated)
                     <span data-id="{{ $user->id }}" class="alert alert-success py-1 px-2 m-0 small">{{ _gettext('Yes') }}</span>
                 @else
                     <span data-id="{{ $user->id }}" class="alert alert-danger py-1 px-2 m-0 small">{{ _gettext('No') }}</span>
                 @endif
                 </td>
-                <td>
+                <td class="align-middle">
                     <select data-id="{{ $user->id }}" class="form-select w-auto" name="access">
                         @foreach($levels as $name => $id)
                         <option value="{{ $id }}" {{ old('access', $user->access) == $id ? 'selected' : '' }}>{{ $id.': '.ucfirst(strtolower($name)) }}</option>
                         @endforeach
                     </select>
                 </td>
+            @can('administrate')
+                <td class="align-middle">
+                    <a class="btn btn-sm btn-light" href="{{ route('admin.members.edit', ['user' => $user->id]) }}">
+                        Edit<i class="bi-pencil ms-2"></i>
+                    </a>
+                    <form class="d-inline" method="post" action="{{ route('admin.members.destroy', ['user' => $user->id]) }}">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-danger">Delete<i class="bi-x ms-2"></i></button>
+                    </form>
+                </td>
+            @endcan
             </tr>
         @endforeach
         </tbody>

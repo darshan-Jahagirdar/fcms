@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserSetting;
+use App\Models\Address;
 
-class AdminMemberController extends Controller
+class MemberController extends Controller
 {
     /**
      * Show the list of members
@@ -20,7 +23,7 @@ class AdminMemberController extends Controller
 
         $levels = config('constants.ACCESS_LEVELS');
 
-        return view('admin.members-index', [
+        return view('admin.members.index', [
             'users'  => $users,
             'levels' => $levels,
         ]);
@@ -31,17 +34,14 @@ class AdminMemberController extends Controller
      * 
      * Edit a member record
      * 
-     * @param string $id 
      * @param Request $request 
      * @return null
      */
-    public function update(string $id, Request $request)
+    public function update(User $user, Request $request)
     {
         $validated = $request->validate([
             'activated' => ['sometimes', 'boolean'],
         ]);
-
-        $user = User::findOrFail($id);
 
         if ($request->has('activated'))
         {
@@ -62,5 +62,26 @@ class AdminMemberController extends Controller
 
             return response()->json($user);
         }
+    }
+
+    /**
+     * destroy 
+     * 
+     * @param User $user 
+     * @param Request $request 
+     * @return null
+     */
+    public function destroy(User $user, Request $request)
+    {
+        // Delete the user settings
+        $settings = UserSetting::where('user_id', $user->id)->delete();
+
+        // Delete the user address
+        $address = Address::where('user_id', $user->id)->delete();
+
+        // Delete the user
+        $user->delete();
+
+        return redirect()->route('admin.members');
     }
 }
