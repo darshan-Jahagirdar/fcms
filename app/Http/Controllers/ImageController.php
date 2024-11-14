@@ -20,7 +20,21 @@ class ImageController extends Controller
      */
     public function showPhoto($userId, $file)
     {
-        return response()->file(storage_path('app/photos') . '/' . $userId . '/main/' . $file);
+        $path = storage_path('app/photos') . '/' . $userId . '/';
+
+        if (file_exists($path . 'main/' . $file))
+        {
+            return response()->file($path . 'main/' . $file);
+        }
+
+        // Legacy photos (prior to 4.0.0)
+        if (file_exists($path . $file))
+        {
+            return response()->file($path . $file);
+        }
+
+        // Return blank file
+        return response('File not found', 404);
     }
 
     /**
@@ -28,18 +42,21 @@ class ImageController extends Controller
      */
     public function showPhotoThumbnail($userId, $file)
     {
-        $path = storage_path('app/photos') . '/' . $userId . '/thumbnail/';
+        $path = storage_path('app/photos') . '/' . $userId . '/';
 
-        // Prior to fcms 4.0.0 we used to prefix the thumbnails with 'tb_'
-        if (config('fcms.legacy'))
+        if (file_exists($path . 'thumbnail/' . $file))
         {
-            if (file_exists($path . 'tb_' . $file))
-            {
-                $file = 'tb_' . $file;
-            }
+            return response()->file($path . 'thumbnail/' . $file);
         }
 
-        return response()->file($path . $file);
+        // Legacy photos (prior to 4.0.0)
+        if (file_exists($path . 'tb_' . $file))
+        {
+            return response()->file($path . 'tb_' . $file);
+        }
+
+        // Return blank file
+        return response('File not found', 404);
     }
 
     /**
