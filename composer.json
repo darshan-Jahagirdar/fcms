@@ -6,15 +6,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "ammarkannas/laravel-bbcode-parser": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "joelbutcher/laravel-facebook-graph": "^1.2",
         "laravel/framework": "^10.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^4.0",
+        "pherum/laravel-bbcode": "^1.1",
         "php-http/guzzle7-adapter": "^1.0",
-        "phpmyadmin/motranslator": "^5.3"
+        "phpmyadmin/motranslator": "^5.3",
+        "rahul900day/laravel-captcha": "^3.0"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^2.0",

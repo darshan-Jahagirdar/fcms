@@ -55,7 +55,7 @@ Route::post('/forgot-password',       [ ForgotPasswordController::class, 'store'
 Route::get( '/reset-password/{code}', [ PasswordResetController::class, 'create' ])->name('password.reset');
 Route::post('/reset-password/{code}', [ PasswordResetController::class, 'store' ])->name('password.store');
 Route::get( '/register',              [ RegisterController::class, 'create' ])->name('register');
-Route::post('/register',              [ RegisterController::class, 'store' ]);
+Route::post('/register',              [ RegisterController::class, 'store' ])->name('register.store');
 
 Route::get( '/calendar/invitation/{id}/code/{code}', [ InvitationController::class, 'show' ])->name('invitations.show');
 

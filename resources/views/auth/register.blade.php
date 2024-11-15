@@ -1,5 +1,7 @@
 @include('layouts.header')
 
+<x-captcha-js />
+
 <body id="register" class="bg-light">
     <main class="m-auto bg-white border p-5">
         <div>
@@ -13,7 +15,7 @@
             </div>
         @endif
 
-            <form action="{{ route('auth.register') }}" method="post">
+            <form action="{{ route('register.store') }}" method="post">
                 @csrf
 
             @if ($errors->any())
@@ -50,6 +52,8 @@
                     <label for="bday">{{ _gettext('Birthday') }}</label>
                     <input type="date" class="form-control" id="bday" name="bday" value="{{ old('bday') }}">
                 </div>
+
+                <x-captcha-container />
 
                 <div class="text-end">
         @if(env('FCMS_AUTO_ACTIVATE'))
