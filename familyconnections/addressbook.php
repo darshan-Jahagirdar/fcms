@@ -196,7 +196,13 @@ class Page
 
         foreach ($rows as $row)
         {
-            $csv .= '"'.join('","', str_replace('"', '""', $row))."\"\015\012";
+            $safeRow = array();
+            foreach ($row as $field)
+            {
+                $safeRow[] = cleanCsvField($field);
+            }
+
+            $csv .= '"'.join('","', str_replace('"', '""', $safeRow))."\"\015\012";
         }
 
         $date = fixDate('Y-m-d', $this->fcmsUser->tzOffset);
